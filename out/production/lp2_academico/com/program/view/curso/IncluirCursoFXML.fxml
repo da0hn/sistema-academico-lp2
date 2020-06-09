@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="309.0" prefWidth="691.0" styleClass="mainFxmlClass"
+            stylesheets="@../css/cadastro.css" xmlns="http://javafx.com/javafx/8.0.111"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.program.view.curso.IncluirCursoController">
+    <children>
+        <AnchorPane id="painelRodape" fx:id="painelRodape" layoutX="116.0" layoutY="498.0" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" styleClass="painel-rodape" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Button id="botaoSair" fx:id="botaoSair" layoutX="470.0" layoutY="3.0" mnemonicParsing="false" onAction="#botaoSairAction" prefHeight="32.0" prefWidth="130.0" styleClass="botao-sair" text="Sair" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="2.0" />
+                <Label id="labelRodape" fx:id="labelRodape" layoutX="35.0" layoutY="6.0" styleClass="label-rodape" text="..." AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="2.0">
+                    <padding>
+                        <Insets left="5.0" right="5.0" />
+                    </padding>
+                </Label>
+            </children>
+        </AnchorPane>
+        <ToolBar id="barraBotoes" layoutX="14.0" layoutY="14.0" maxHeight="80.0" minHeight="60.0" prefHeight="80.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <Button id="botaoIncluir" fx:id="botaoIncluir" contentDisplay="BOTTOM" maxHeight="70.0" maxWidth="100.0" minHeight="70.0" minWidth="100.0" onAction="#botaoIncluirAction" prefHeight="70.0" prefWidth="100.0" styleClass="botao-incluir" text="_Incluir" />
+                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                <Button id="botaoSalvar" fx:id="botaoSalvar" contentDisplay="BOTTOM" maxHeight="70.0" maxWidth="100.0" minHeight="70.0" minWidth="100.0" onAction="#botaoSalvarAction" prefHeight="70.0" prefWidth="100.0" styleClass="botao-salvar" text="_Salvar" />
+            </items>
+        </ToolBar>
+            <GridPane id="gridCampos" fx:id="gridCampos" maxHeight="325.0" minHeight="70.0" prefHeight="102.0" prefWidth="680.0" styleClass="grid-campos" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="100.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="97.0" />
+                    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="578.0" minWidth="10.0" prefWidth="578.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Label text="Nome" />
+                    <TextField id="campoNome" fx:id="campoNome" prefHeight="25.0" prefWidth="426.0" styleClass="campo-dados" GridPane.columnIndex="1" />
+                </children>
+                <padding>
+                    <Insets left="5.0" top="10.0" />
+                </padding>
+            </GridPane>
+    </children>
+</AnchorPane>

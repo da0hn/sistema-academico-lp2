@@ -1,0 +1,30 @@
+.mainFxmlClass {
+
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.label {
+    -fx-font-style: italic;
+    -fx-font-size: 14px;
+    -fx-text-fill: darkgreen;
+}
+
+.label-titulo {
+    -fx-font-style: normal;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-alignment: CENTER;
+    -fx-background-color: lavender;
+}
+
+.painel-rodape {
+    -fx-background-color: ghostwhite;
+}
+
+.painel-principal {
+    -fx-background-color: ghostwhite;
+}
