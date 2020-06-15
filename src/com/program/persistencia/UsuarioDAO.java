@@ -5,7 +5,6 @@ import com.program.persistencia.base.PersistenciaException;
 import com.program.vo.EnumPerfilUsuario;
 import com.program.vo.UsuarioVO;
 
-import java.io.PipedReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,21 +101,21 @@ public class UsuarioDAO extends DAO {
         return retorno;
     }
 
-    public int alterarSenha(String login, String novaSenha) throws PersistenciaException {
-        int retorno;
+    public int alterarSenha(String login, String novaSenha) {
+        int retorno = 0;
         try {
             comandoAlterarSenha.setString(1, novaSenha);
             comandoAlterarSenha.setString(2, login.toUpperCase());
             retorno = comandoAlterarSenha.executeUpdate();
         }
         catch(SQLException ex) {
-            throw new PersistenciaException(
+            System.err.println(
                     "DAO - Erro ao alterar a senha do usuário - " + ex.getMessage());
         }
         return retorno;
     }
 
-    public UsuarioVO buscarPorCodigo(int codigo) throws PersistenciaException {
+    public UsuarioVO buscarPorCodigo(int codigo) {
         UsuarioVO usuario = null;
         try {
             comandoBuscarUsuarioPorCodigo.setInt(1, codigo);
@@ -126,13 +125,13 @@ public class UsuarioDAO extends DAO {
             }
         }
         catch(SQLException ex) {
-            throw new PersistenciaException(
+            System.err.println(
                     "DAO - Erro ao buscar usuário por código - " + ex.getMessage());
         }
         return usuario;
     }
 
-    public List<UsuarioVO> buscarPorNome(String nome) throws PersistenciaException {
+    public List<UsuarioVO> buscarPorNome(String nome) {
         var listaUsuario = new ArrayList<UsuarioVO>();
         try {
             comandoBuscarUsuarioPorNome.setString(1,
@@ -144,15 +143,15 @@ public class UsuarioDAO extends DAO {
             }
         }
         catch(SQLException ex) {
-            throw new PersistenciaException(
+            System.err.println(
                     "DAO - Erro ao buscar usuarios por nome - " + ex.getMessage());
         }
         return listaUsuario;
     }
 
-    public UsuarioVO buscarPorLogin(String login) throws PersistenciaException {
+    public UsuarioVO buscarPorLogin(String login) {
         UsuarioVO usuario = null;
-        try{
+        try {
             comandoBuscarUsuarioPorLogin.setString(1, login.toUpperCase());
             var rs = comandoBuscarUsuarioPorLogin.executeQuery();
             if(rs.next()) {
@@ -160,7 +159,7 @@ public class UsuarioDAO extends DAO {
             }
         }
         catch(SQLException ex) {
-            throw new PersistenciaException("DAO - Erro ao buscar usuario por login - " + ex.getMessage());
+            System.err.println("DAO - Erro ao buscar usuario por login - " + ex.getMessage());
         }
         return usuario;
     }

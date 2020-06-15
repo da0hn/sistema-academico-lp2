@@ -9,8 +9,6 @@ import com.program.vo.EnumPerfilUsuario;
 import com.program.vo.UsuarioVO;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 /*
  * @project lp2_academico
@@ -109,31 +107,16 @@ public class Usuario {
         }
     }
 
-    public List<UsuarioVO> pesquisaPorNome(String parteNome) throws NegocioException {
-        try {
-            return usuarioDAO.buscarPorNome(parteNome);
-        }
-        catch(PersistenciaException e) {
-            throw new NegocioException("Erro ao buscar por nome - " + e.getMessage());
-        }
+    public List<UsuarioVO> pesquisaPorNome(String parteNome) {
+        return usuarioDAO.buscarPorNome(parteNome);
     }
 
-    public UsuarioVO pesquisaPorCodigo(int codigo) throws NegocioException {
-        try {
-            return usuarioDAO.buscarPorCodigo(codigo);
-        }
-        catch(PersistenciaException e) {
-            throw new NegocioException("Erro ao buscar por codigo - " + e.getMessage());
-        }
+    public UsuarioVO pesquisaPorCodigo(int codigo) {
+        return usuarioDAO.buscarPorCodigo(codigo);
     }
 
-    public UsuarioVO pesquisaPorLogin(String login) throws NegocioException {
-        try {
-            return usuarioDAO.buscarPorLogin(login);
-        }
-        catch(PersistenciaException e) {
-            throw new NegocioException("Erro ao buscar login - " + e.getMessage());
-        }
+    public UsuarioVO pesquisaPorLogin(String login) {
+        return usuarioDAO.buscarPorLogin(login);
     }
 
     private String validarDados(UsuarioVO usuario) {
@@ -191,14 +174,17 @@ public class Usuario {
                 if(usuario != null) {
                     if(usuarioDAO.alterarSenha(login, novaSenha) == 1) {
                         usuarioDAO.confirmarTransacao();
-                    } else {
+                    }
+                    else {
                         usuarioDAO.cancelarTransacao();
                         throw new NegocioException("Senha não alterada");
                     }
-                } else {
+                }
+                else {
                     throw new NegocioException("Login não localizado");
                 }
-            } else {
+            }
+            else {
                 throw new NegocioException("A senha e a confirmação devem ser iguais");
             }
         }
@@ -207,22 +193,19 @@ public class Usuario {
         }
     }
 
-    public UsuarioVO login(String login, String senha) throws NegocioException{
+    public UsuarioVO login(String login, String senha) throws NegocioException {
         UsuarioVO usuarioVO = null;
-        try {
-            usuarioVO = usuarioDAO.buscarPorLogin(login);
-            if(usuarioVO != null) {
-                if(senha.equals(usuarioVO.getSenha())) {
-                    return usuarioVO;
-                } else {
-                    return null;
-                }
-            } else {
+        usuarioVO = usuarioDAO.buscarPorLogin(login);
+        if(usuarioVO != null) {
+            if(senha.equals(usuarioVO.getSenha())) {
+                return usuarioVO;
+            }
+            else {
                 return null;
             }
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException("Não foi possível fazer login - " + e.getMessage());
+        else {
+            return null;
         }
     }
 

@@ -14,5 +14,6 @@ module academico {
     opens com.program.view.aluno;
     opens com.program.view.base;
     opens com.program.view.curso;
+    opens com.program.view.usuario;
     opens com.program.view;
 }

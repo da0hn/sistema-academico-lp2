@@ -7,28 +7,29 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0" stylesheets="@css/menuprincipal.css"
-            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.program.view.MenuPrincipalController">
-   <children>
-      <MenuBar fx:id="barraMenu" layoutX="214.0" layoutY="32.0" prefHeight="27.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="Configurações">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Cadastros">
-            <items>
-              <MenuItem id="menuItemCadastroAluno" fx:id="menuItemCadastroAluno" mnemonicParsing="false" onAction="#menuItemCadastroAlunoAction" text="Aluno" />
-                  <MenuItem id="menuItemCadastroProfessor" fx:id="menuItemCadastroProfessor" mnemonicParsing="false" onAction="#menuItemCadastroProfessorAction" text="Curso" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Relatórios">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </children>
+    <children>
+        <MenuBar fx:id="barraMenu" layoutX="214.0" layoutY="32.0" prefHeight="27.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="Configurações">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Cadastros">
+                    <items>
+                        <MenuItem id="menuItemCadastroAluno" mnemonicParsing="false" onAction="#menuItemCadastroAlunoAction" text="Aluno" />
+                        <MenuItem id="menuItemCadastroProfessor" mnemonicParsing="false" onAction="#menuItemCadastroCursoAction" text="Curso" />
+                        <MenuItem id="menuItemCadastroProfessor" mnemonicParsing="false" onAction="#menuItemCadastroUsuarioAction" text="Usuário" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Relatórios">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </children>
 </AnchorPane>
