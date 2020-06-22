@@ -12,7 +12,8 @@ import java.util.List;
 /**
  * @author Gabriel Honda on 22/06/2020
  * @project lp2_academico
- */
+ *
+ * */
 public class Disciplina implements IDisciplina {
 
     private DisciplinaDAO disciplinaDAO;

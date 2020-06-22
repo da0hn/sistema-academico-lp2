@@ -18,16 +18,12 @@ public class DatabaseConnection {
 
     private DatabaseConnection() throws PersistenciaException {
         try {
-            Class.forName("org.postgresql.Driver");
-            final String url = "jdbc:postgresql://localhost:5432/academico";
-            connection = DriverManager.getConnection(url, "postgres", "admin");
+            var propriedades = carregarPropriedades();
+            var url = propriedades.getProperty("UrlBD");
+            connection = DriverManager.getConnection(url, propriedades);
         }
         catch(SQLException ex) {
             throw new PersistenciaException("Erro ao conectar o banco de dados - " + ex.toString());
-        }
-        catch(ClassNotFoundException ex) {
-            throw new PersistenciaException(
-                    "Driver do banco de dados não localizado - " + ex.toString());
         }
     }
 
@@ -38,13 +34,13 @@ public class DatabaseConnection {
         return INSTANCE;
     }
 
-    private static Properties carregarPropriedades() {
+    private static Properties carregarPropriedades() throws PersistenciaException {
         Properties propriedadesDeConexao = new Properties();
         try( var fs = new FileInputStream("configuracaoBD.properties")) {
             propriedadesDeConexao.load(fs);
         }
         catch(IOException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Erro ao carregar as propriedades");
         }
         return propriedadesDeConexao;
     }
