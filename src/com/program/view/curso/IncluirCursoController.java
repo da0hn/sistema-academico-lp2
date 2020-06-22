@@ -1,8 +1,5 @@
 package com.program.view.curso;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.program.negocio.Curso;
 import com.program.negocio.base.NegocioException;
 import com.program.view.base.MensagemUtil;
@@ -15,6 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class IncluirCursoController implements Initializable {
 
@@ -37,7 +37,8 @@ public class IncluirCursoController implements Initializable {
     public IncluirCursoController() {
         try {
             this.cursoNegocio = new Curso();
-        } catch (NegocioException ex) {
+        }
+        catch(NegocioException ex) {
             MensagemUtil.mensagemAlerta("Camada de Negócio não iniciada!");
             this.sair();
         }
@@ -75,7 +76,8 @@ public class IncluirCursoController implements Initializable {
             this.botaoSalvar.setDisable(true);
             this.gridCampos.setDisable(true);
             this.labelRodape.setText("Inclusão realizada com sucesso!");
-        } catch (NegocioException ex) {
+        }
+        catch(NegocioException ex) {
             MensagemUtil.mensagemErro("Erro de Inclusão \n\n" + ex.toString());
             this.botaoIncluir.setDisable(true);
             this.botaoSalvar.setDisable(false);

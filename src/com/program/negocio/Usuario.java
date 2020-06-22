@@ -10,10 +10,6 @@ import com.program.vo.UsuarioVO;
 
 import java.util.List;
 
-/*
- * @project lp2_academico
- * @author Gabriel Honda on 10/06/2020
- */
 public class Usuario {
 
     private UsuarioDAO usuarioDAO;
@@ -22,88 +18,95 @@ public class Usuario {
         try {
             this.usuarioDAO = new UsuarioDAO(DatabaseConnection.getInstance());
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException(" Erro ao iniciar a Persistencia - " + e.getMessage());
+        catch(PersistenciaException ex) {
+            throw new NegocioException("Erro ao iniciar a Persistencia - " + ex.getMessage());
         }
     }
 
-    public void incluir(UsuarioVO usuario) throws NegocioException {
-        String mensagensDeErro = this.validarDados(usuario);
-        if(!mensagensDeErro.isEmpty()) {
-            throw new NegocioException(mensagensDeErro);
+    public void incluir(UsuarioVO usuarioVO) throws NegocioException {
+        String mensagemErros = this.validarDados(usuarioVO);
+
+        if(!mensagemErros.isEmpty()) {
+            throw new NegocioException(mensagemErros);
         }
+
         try {
-            if(usuarioDAO.buscarPorLogin(usuario.getLogin()) != null) {
-                mensagensDeErro += " Ja existe um usuário com esse Login";
-                throw new NegocioException(mensagensDeErro);
+            if(usuarioDAO.buscarPorLogin(usuarioVO.getLogin()) != null) {
+                mensagemErros += "Ja existe um usuario com esse Login";
+                throw new NegocioException(mensagemErros);
             }
-            // senha inicial do usuário
-            usuario.setSenha(usuario.getLogin().toLowerCase());
-            if(usuarioDAO.incluir(usuario) == 1) {
+
+            usuarioVO.setSenha(usuarioVO.getLogin().toLowerCase()); //senha inicial de usuário
+            if(usuarioDAO.incluir(usuarioVO) == 1) {
                 usuarioDAO.confirmarTransacao();
             }
             else {
-                usuarioDAO.cancelarTransacao();
-                throw new NegocioException(" Inclusão não realizada!");
+                throw new NegocioException("Inclusao nao realizada!");
             }
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException(" Erro ao incluir o usuário - " + e.getMessage());
+        catch(PersistenciaException ex) {
+            throw new NegocioException("Erro ao incluir o usuario - " + ex.getMessage());
         }
     }
 
-    public void alterar(UsuarioVO usuario) throws NegocioException {
-        String mensagensDeErro = this.validarDados(usuario);
-        if(!mensagensDeErro.isEmpty()) {
-            throw new NegocioException(mensagensDeErro);
+    public void alterar(UsuarioVO usuarioVO) throws NegocioException {
+        String mensagemErros = this.validarDados(usuarioVO);
+
+        if(!mensagemErros.isEmpty()) {
+            throw new NegocioException(mensagemErros);
         }
-        if(usuario.getSenha() != null && usuario.getSenha().equals(usuario.getLogin())) {
-            mensagensDeErro += " Senha não pode ser igual ao login";
-            throw new NegocioException(mensagensDeErro);
+
+        if(usuarioVO.getSenha() != null && usuarioVO.getSenha().equals(usuarioVO.getLogin())) {
+            mensagemErros += "Senha nao pode ser igual ao login";
+            throw new NegocioException(mensagemErros);
         }
+
         try {
-            var usuarioTemp = usuarioDAO.buscarPorCodigo(usuario.getCodigo());
+            UsuarioVO usuarioTemp = usuarioDAO.buscarPorCodigo(usuarioVO.getCodigo());
             if(usuarioTemp == null) {
-                mensagensDeErro += " Não existe um usuário com esse Código";
-                throw new NegocioException(mensagensDeErro);
+                mensagemErros += "Nao existe um usuario com esse Codigo";
+                throw new NegocioException(mensagemErros);
             }
-            usuarioTemp = usuarioDAO.buscarPorLogin(usuario.getLogin());
-            if(usuarioTemp != null && !usuarioTemp.equals(usuario)) {
-                mensagensDeErro += " Já existe um usuario com esse login";
-                throw new NegocioException(mensagensDeErro);
+
+            usuarioTemp = usuarioDAO.buscarPorLogin(usuarioVO.getLogin());
+            if(usuarioTemp != null && !usuarioTemp.equals(usuarioVO)) {
+                mensagemErros += "Ja existe um usuario com esse Login";
+                throw new NegocioException(mensagemErros);
             }
-            if(usuarioDAO.alterar(usuario) == 1) {
+
+            if(usuarioDAO.alterar(usuarioVO) == 1) {
                 usuarioDAO.confirmarTransacao();
             }
             else {
-                usuarioDAO.cancelarTransacao();
-                throw new NegocioException(" Alteração não realizada!");
+                throw new NegocioException("Alteracao nao realizada!");
             }
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException(" Erro ao alterar o usuario - " + e.getMessage());
+        catch(PersistenciaException ex) {
+            throw new NegocioException("Erro ao alterar o usuario - " + ex.getMessage());
         }
     }
 
-    public void excluir(UsuarioVO usuario) throws NegocioException {
+    public void excluir(UsuarioVO usuarioVO) throws NegocioException {
         try {
-            if(usuarioDAO.buscarPorCodigo(usuario.getCodigo()) == null) {
-                throw new NegocioException(" Usuario não identificado!");
+            if(usuarioDAO.buscarPorCodigo(usuarioVO.getCodigo()) == null) {
+                throw new NegocioException("Usuario nao identificado!");
             }
-            if(usuario.getNome().equalsIgnoreCase("Administrador")) {
-                throw new NegocioException("Usuario Administrador não pode ser excluido!");
+
+            if(usuarioVO.getNome().equalsIgnoreCase("Administrador")) {
+                throw new NegocioException("Usuario Administrador nao pode ser excluido!");
             }
-            // fazer a verificacao se o usuario tem relacionamento com registros de atendimentos
-            if(usuarioDAO.excluir(usuario.getCodigo()) == 0) {
-                usuarioDAO.cancelarTransacao();
-                throw new NegocioException("Exclusão não realizada");
+
+            //fazer a veriricação se o usuario tem relacionamento com registros de atendimento
+
+            if(usuarioDAO.excluir(usuarioVO.getCodigo()) == 0) {
+                throw new NegocioException("Exclusao nao realizada!");
             }
             else {
                 usuarioDAO.confirmarTransacao();
             }
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException(" Erro ao excluir o usuario - " + e.getMessage());
+        catch(PersistenciaException ex) {
+            throw new NegocioException("Erro ao excluir o usuario - " + ex.getMessage());
         }
     }
 
@@ -119,81 +122,87 @@ public class Usuario {
         return usuarioDAO.buscarPorLogin(login);
     }
 
-    private String validarDados(UsuarioVO usuario) {
-        var builder = new StringBuilder();
-        if(usuario.getLogin() == null || usuario.getLogin().length() < 5) {
-            builder.append("Login do usuário não pode ser menor que 5 caracteres!");
+    public String validarDados(UsuarioVO usuarioVO) {
+        String mensagemErros = "";
+
+        if(usuarioVO.getLogin() == null || usuarioVO.getMatricula().length() < 3) {
+            mensagemErros += "Login do usuario nao pode ser menor que 5 caracteres!";
         }
-        if(usuario.getMatricula() == null || usuario.getMatricula().length() == 0) {
-            builder.append("\nMatricula do usuario não pode ser vazia!");
+
+        if(usuarioVO.getMatricula() == null || usuarioVO.getMatricula().length() == 0) {
+            mensagemErros += "\nMatricula do usuario nao pode ser vazia!";
         }
-        if(usuario.getNome() == null || usuario.getNome().length() == 0) {
-            builder.append("\nNome do usuário não pode ser vazio!");
+
+        if(usuarioVO.getNome() == null || usuarioVO.getNome().length() == 0) {
+            mensagemErros += "\nNome do usuario nao pode ser vazio!";
         }
-        if(usuario.getEmail() == null || usuario.getEmail().length() == 0) {
-            builder.append("\nE-mail do usuario não pde ser vazio!");
+
+        if(usuarioVO.getEmail() == null || usuarioVO.getEmail().length() == 0) {
+            mensagemErros += "\nE-mail do usuario nao pode ser vazio!";
         }
-        if(usuario.getPerfil() == null) {
-            builder.append("\nPerfil do usuario não pode ser vazio!");
+
+        if(usuarioVO.getPerfil() == null) {
+            mensagemErros += "\nPerfil do usuario nao pode ser vazio!";
         }
-        return builder.toString();
+
+        return mensagemErros;
     }
 
     public String verificaPrimeiroAcesso() throws NegocioException {
         String resp = "";
         if(AcessoUtil.getUsuarioLogado() == null) {
-            // não existe nenhum usuario cadastrado no banco
+            //não existe nenhum usuario cadastrado
             if(this.pesquisaPorNome("").isEmpty()) {
                 try {
-                    var usuario = new UsuarioVO();
-                    usuario.setMatricula("000000");
-                    usuario.setLogin("adm");
-                    usuario.setNome("Administrador");
-                    usuario.setPerfil(EnumPerfilUsuario.ADMINISTRADOR);
-                    // senha padrão de inclusão
-                    usuario.setSenha(usuario.getLogin().toLowerCase());
-                    usuario.setEmail("adm@adm.com");
-                    this.incluir(usuario);
-                    resp = "Um usuario Administrador (login: adm, senha: adm) foi gerado" +
-                            "realizar Login para alterar senha inicial.";
+                    UsuarioVO usuarioVO = new UsuarioVO();
+                    usuarioVO.setMatricula("000000");
+                    usuarioVO.setLogin("adm");
+                    usuarioVO.setNome("Administrador");
+                    usuarioVO.setPerfil(EnumPerfilUsuario.ADMINISTRADOR);
+                    //senha padrão de inclusão
+                    usuarioVO.setSenha(usuarioVO.getLogin().toLowerCase());
+                    usuarioVO.setEmail("adm@adm");
+                    this.incluir(usuarioVO);
+                    resp = "Um usuario Administrador (login: adm, senha adm) foi gerado. \nFavor " +
+                            "realizar Login para alterar senha inicial";
                 }
-                catch(NegocioException e) {
+                catch(NegocioException ex) {
                     throw new NegocioException(
-                            "Usuario administrador não foi gerado - " + e.getMessage());
+                            "Usuario Administrador nao gerado - " + ex.getMessage());
                 }
             }
         }
         return resp;
     }
 
-    public void alterarSenha(String login, String novaSenha,
+    public void alterarSenha(String longin, String novaSenha,
             String confirmacao) throws NegocioException {
-        try {
-            if(novaSenha.equals(confirmacao)) {
-                var usuario = usuarioDAO.buscarPorLogin(login);
-                if(usuario != null) {
-                    if(usuarioDAO.alterarSenha(login, novaSenha) == 1) {
+
+        if(novaSenha.equals(confirmacao)) {
+            UsuarioVO usuarioVO = usuarioDAO.buscarPorLogin(longin);
+            if(usuarioVO != null) {
+                try {
+                    if(usuarioDAO.alterarSenha(longin, novaSenha) == 1) {
                         usuarioDAO.confirmarTransacao();
                     }
                     else {
-                        usuarioDAO.cancelarTransacao();
-                        throw new NegocioException("Senha não alterada");
+                        throw new NegocioException("Senha nao alterada");
                     }
                 }
-                else {
-                    throw new NegocioException("Login não localizado");
+                catch(PersistenciaException ex) {
+                    throw new NegocioException("Erro ao alterar a senha - " + ex);
                 }
             }
             else {
-                throw new NegocioException("A senha e a confirmação devem ser iguais");
+                throw new NegocioException("Login não localizado");
             }
         }
-        catch(PersistenciaException e) {
-            throw new NegocioException("Erro ao tentar alterar a senha - " + e.getMessage());
+        else {
+            throw new NegocioException("A Senha e a Confirmacao devem ser iguais");
         }
     }
 
-    public UsuarioVO login(String login, String senha) throws NegocioException {
+    public UsuarioVO login(String login, String senha) {
         UsuarioVO usuarioVO = null;
         usuarioVO = usuarioDAO.buscarPorLogin(login);
         if(usuarioVO != null) {

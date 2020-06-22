@@ -1,11 +1,8 @@
 package com.program.view.curso;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import com.program.negocio.Curso;
 import com.program.negocio.base.NegocioException;
+import com.program.view.base.BaseController;
 import com.program.view.base.MensagemUtil;
 import com.program.view.base.OpCadastroEnum;
 import com.program.vo.CursoVO;
@@ -24,14 +21,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
-public class CadastroCursoController implements Initializable {
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
-    //---------Classes de Negócio e Controle da Lógica----------
+public class CadastroCursoController extends BaseController implements Initializable {
+
+    //---------Classes de Negocio e Controle da Logica----------
     private Curso cursoNegocio;
     private OpCadastroEnum opCadastro;
-    private Stage stage;
     private List<CursoVO> listaCurso;
 
     //---------Componentes Visuais---------
@@ -62,17 +61,8 @@ public class CadastroCursoController implements Initializable {
     @FXML
     private TextField campoPesquisaNome;
 
-    public CadastroCursoController() {
-        try {
-            this.cursoNegocio = new Curso();
-        } catch (NegocioException ex) {
-            MensagemUtil.mensagemAlerta("Camada de Negócio não iniciada!");
-            this.sair();
-        }
-    }
-
-    public void setPalcoOrigem(Stage stage) {
-        this.stage = stage;
+    public CadastroCursoController() throws Exception {
+        this.cursoNegocio = new Curso();
     }
 
     @Override
@@ -85,15 +75,16 @@ public class CadastroCursoController implements Initializable {
         this.iniciarDadosTableView();
     }
 
-    //=====================Trata a Lógica da Interface de Cadastro=========
+    //=====================Trata a Logica da Interface de Cadastro=========
     private void iniciarDadosTableView() {
         try {
             this.listaCurso = this.cursoNegocio.pesquisaParteNome(" ");
-        } catch (NegocioException ex) {
-            MensagemUtil.mensagemAlerta("Dados não localizados!" + ex.getMessage());
+        }
+        catch(NegocioException ex) {
+            MensagemUtil.mensagemAlerta("Dados nao localizados!" + ex.getMessage());
         }
 
-        TableColumn coluna1 = new TableColumn("Código");
+        TableColumn coluna1 = new TableColumn("Codigo");
         TableColumn coluna2 = new TableColumn("Nome");
 
         coluna1.setMinWidth(100);
@@ -115,7 +106,7 @@ public class CadastroCursoController implements Initializable {
     private CursoVO obterVOTableView() {
         CursoVO cursoVO = null;
 
-        if (this.tabelaDados.getSelectionModel().getSelectedItem() != null) {
+        if(this.tabelaDados.getSelectionModel().getSelectedItem() != null) {
             TableViewSelectionModel selectionModel = this.tabelaDados.getSelectionModel();
             cursoVO = (CursoVO) selectionModel.getSelectedItem();
         }
@@ -129,31 +120,34 @@ public class CadastroCursoController implements Initializable {
         this.tabDados.getSelectionModel().selectLast();
         this.gridCampos.setDisable(false);
         this.campoNome.requestFocus();
-        this.labelRodape.setText("Inclusão em andamento...");
+        this.labelRodape.setText("Inclusao em andamento...");
     }
 
     private void iniciarAlteracao() {
         CursoVO cursoVO = this.obterVOTableView();
 
-        if (cursoVO != null) {
+        if(cursoVO != null) {
             try {
                 cursoVO = this.cursoNegocio.pesquisaMatricula(cursoVO.getCodigo());
-            } catch (NegocioException ex) {
+            }
+            catch(NegocioException ex) {
                 MensagemUtil.mensagemAlerta("Erro ao localizar o curso!" + ex.getMessage());
             }
 
-            if (cursoVO != null) {
+            if(cursoVO != null) {
                 this.opCadastro = OpCadastroEnum.ALTERAR;
                 this.TrataBotoes();
                 this.preencheCampos(cursoVO);
                 this.tabDados.getSelectionModel().selectLast();
                 this.gridCampos.setDisable(false);
                 this.campoNome.requestFocus();
-                this.labelRodape.setText("Alteração em andamento...");
-            } else {
-                MensagemUtil.mensagemAlerta("Item não localizado!");
+                this.labelRodape.setText("Alteracao em andamento...");
             }
-        } else {
+            else {
+                MensagemUtil.mensagemAlerta("Item nao localizado!");
+            }
+        }
+        else {
             MensagemUtil.mensagemAlerta("Nenhum item selecionado!");
         }
     }
@@ -161,18 +155,19 @@ public class CadastroCursoController implements Initializable {
     private void processarInclusao() {
         CursoVO cursoVO = this.criarVODados();
 
-        if (cursoVO != null) {
+        if(cursoVO != null) {
             try {
                 this.cursoNegocio.inserir(cursoVO);
                 this.opCadastro = OpCadastroEnum.SALVAR;
                 this.TrataBotoes();
                 this.gridCampos.setDisable(true);
-                this.labelRodape.setText("Inclusão realizada com sucesso!");
+                this.labelRodape.setText("Inclusao realizada com sucesso!");
                 this.listaCurso = this.cursoNegocio.pesquisaParteNome("");
                 this.atualizarDadosTableView();
                 this.tabDados.getSelectionModel().selectFirst();
-            } catch (NegocioException ex) {
-                MensagemUtil.mensagemErro("Erro de Inclusão \n\n"+ex.getMessage());
+            }
+            catch(NegocioException ex) {
+                MensagemUtil.mensagemErro("Erro de Inclusao \n\n" + ex.getMessage());
                 this.opCadastro = OpCadastroEnum.INCLUIR;
                 this.TrataBotoes();
                 this.campoNome.requestFocus();
@@ -183,18 +178,19 @@ public class CadastroCursoController implements Initializable {
     public void processarAlteracao() {
         CursoVO cursoVO = this.criarVODados();
 
-        if (cursoVO != null) {
+        if(cursoVO != null) {
             try {
                 this.cursoNegocio.alterar(cursoVO);
                 this.opCadastro = OpCadastroEnum.SALVAR;
                 this.TrataBotoes();
                 this.gridCampos.setDisable(true);
-                this.labelRodape.setText("Alteração realizada com sucesso!");
+                this.labelRodape.setText("Alteracao realizada com sucesso!");
                 this.listaCurso = this.cursoNegocio.pesquisaParteNome("");
                 this.atualizarDadosTableView();
                 this.tabDados.getSelectionModel().selectFirst();
-            } catch (NegocioException ex) {
-                MensagemUtil.mensagemErro("Erro de Alteração \n\n"+ex.getMessage());
+            }
+            catch(NegocioException ex) {
+                MensagemUtil.mensagemErro("Erro de Alteracao \n\n" + ex.getMessage());
                 this.opCadastro = OpCadastroEnum.ALTERAR;
                 this.TrataBotoes();
                 this.campoNome.requestFocus();
@@ -205,30 +201,33 @@ public class CadastroCursoController implements Initializable {
     private void processarExclusao() {
         CursoVO cursoVO = this.obterVOTableView();
 
-        if (cursoVO != null) {
+        if(cursoVO != null) {
             try {
                 cursoVO = this.cursoNegocio.pesquisaMatricula(cursoVO.getCodigo());
                 this.opCadastro = OpCadastroEnum.EXCLUIR;
                 this.TrataBotoes();
-                this.labelRodape.setText("Exclusão em andamento...");
+                this.labelRodape.setText("Exclusao em andamento...");
 
-                if (MensagemUtil.mensagemConfirmacao("Confirma a exclusão de " + cursoVO)) {
+                if(MensagemUtil.mensagemConfirmacao("Confirma a exclusao de " + cursoVO)) {
                     try {
                         this.cursoNegocio.excluir(cursoVO.getCodigo());
                         this.TrataBotoes();
-                        this.labelRodape.setText("Exclusão realizada com sucesso!");
+                        this.labelRodape.setText("Exclusao realizada com sucesso!");
                         this.listaCurso = this.cursoNegocio.pesquisaParteNome("");
                         this.atualizarDadosTableView();
-                    } catch (NegocioException ex) {
-                        MensagemUtil.mensagemErro("Erro de Exclusão \n\n"+ex.getMessage());
+                    }
+                    catch(NegocioException ex) {
+                        MensagemUtil.mensagemErro("Erro de Exclusao \n\n" + ex.getMessage());
                     }
                     this.opCadastro = OpCadastroEnum.CONSULTAR;
                 }
-            } catch (NegocioException ex) {
-                MensagemUtil.mensagemAlerta("Item não localizado!");
+            }
+            catch(NegocioException ex) {
+                MensagemUtil.mensagemAlerta("Item nao localizado!");
             }
 
-        } else {
+        }
+        else {
             MensagemUtil.mensagemAlerta("Nenhum item selecionado!");
         }
     }
@@ -238,34 +237,34 @@ public class CadastroCursoController implements Initializable {
         this.TrataBotoes();
         this.tabDados.getSelectionModel().selectFirst();
         this.gridCampos.setDisable(true);
-        this.labelRodape.setText("Operação cancelada...");
+        this.labelRodape.setText("Operacao cancelada...");
     }
 
     private void processarFiltroPorNome(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
+        if(keyEvent.getCode() == KeyCode.ENTER) {
             this.listaCurso.clear();
 
             try {
-                this.listaCurso = this.cursoNegocio.pesquisaParteNome(this.campoPesquisaNome.getText().trim());
-            } catch (NegocioException ex) {
-                MensagemUtil.mensagemErro("Erro durante a consulta de dados \n\n"+ex.getMessage());
+                this.listaCurso = this.cursoNegocio.pesquisaParteNome(
+                        this.campoPesquisaNome.getText().trim());
+            }
+            catch(NegocioException ex) {
+                MensagemUtil.mensagemErro(
+                        "Erro durante a consulta de dados \n\n" + ex.getMessage());
             }
             this.atualizarDadosTableView();
         }
     }
 
-    private void sair() {
-        this.stage.close();
-    }
-
     private void TrataBotoes() {
-        if (this.opCadastro == OpCadastroEnum.INCLUIR || this.opCadastro == OpCadastroEnum.ALTERAR) {
+        if(this.opCadastro == OpCadastroEnum.INCLUIR || this.opCadastro == OpCadastroEnum.ALTERAR) {
             this.botaoIncluir.setDisable(true);
             this.botaoAlterar.setDisable(true);
             this.botaoExcluir.setDisable(true);
             this.botaoSalvar.setDisable(false);
             this.botaoCancelar.setDisable(false);
-        } else if (this.opCadastro == OpCadastroEnum.SALVAR
+        }
+        else if(this.opCadastro == OpCadastroEnum.SALVAR
                 || this.opCadastro == OpCadastroEnum.CANCELAR
                 || this.opCadastro == OpCadastroEnum.CONSULTAR) {
             this.botaoIncluir.setDisable(false);
@@ -292,13 +291,14 @@ public class CadastroCursoController implements Initializable {
         try {
             cursoVO = new CursoVO();
 
-            if (this.opCadastro == OpCadastroEnum.ALTERAR) {
+            if(this.opCadastro == OpCadastroEnum.ALTERAR) {
                 cursoVO.setCodigo(Integer.parseInt(this.campoCodigo.getText()));
             }
 
             cursoVO.setNome(this.campoNome.getText());
 
-        } catch (Exception ex) {
+        }
+        catch(Exception ex) {
             cursoVO = null;
             MensagemUtil.mensagemErro("Dados inconsistentes!");
         }
@@ -323,9 +323,10 @@ public class CadastroCursoController implements Initializable {
 
     @FXML
     private void botaoSalvarAction(ActionEvent event) {
-        if (this.opCadastro == OpCadastroEnum.INCLUIR) {
+        if(this.opCadastro == OpCadastroEnum.INCLUIR) {
             this.processarInclusao();
-        } else if (this.opCadastro == OpCadastroEnum.ALTERAR) {
+        }
+        else if(this.opCadastro == OpCadastroEnum.ALTERAR) {
             this.processarAlteracao();
         }
     }

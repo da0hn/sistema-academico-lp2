@@ -8,7 +8,7 @@ logradouro varchar(50),
 numero integer,
 bairro varchar(40),
 cidade varchar(40),
-uf character(2),
+enumUf character(2),
 curso integer,
 PRIMARY KEY (matricula),
 FOREIGN KEY (curso) REFERENCES curso (codigo)

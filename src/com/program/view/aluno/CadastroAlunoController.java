@@ -3,6 +3,7 @@ package com.program.view.aluno;
 import com.program.negocio.Aluno;
 import com.program.negocio.Curso;
 import com.program.negocio.base.NegocioException;
+import com.program.view.base.BaseController;
 import com.program.view.base.MensagemUtil;
 import com.program.view.base.OpCadastroEnum;
 import com.program.vo.AlunoVO;
@@ -25,22 +26,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class CadastroAlunoController implements Initializable {
+public class CadastroAlunoController extends BaseController implements Initializable {
 
     //---------Classes de Negócio e Controle da Lógica----------
     private Aluno alunoNegocio;
     private Curso cursoNegocio;
-
     private OpCadastroEnum opCadastro;
-    private Stage stage;
-
     private List<AlunoVO> listaAluno;
     private List<CursoVO> listaCurso;
 
@@ -90,20 +86,9 @@ public class CadastroAlunoController implements Initializable {
     @FXML
     private ComboBox comboCurso;
 
-    public CadastroAlunoController() {
-        try {
-            this.alunoNegocio = new Aluno();
-            this.cursoNegocio = new Curso();
-
-        }
-        catch(NegocioException ex) {
-            MensagemUtil.mensagemAlerta("Camada de Negócio não Iniciada! ERRO AQUI");
-            this.sair();
-        }
-    }
-
-    public void setPalcoOrigem(Stage stage) {
-        this.stage = stage;
+    public CadastroAlunoController() throws Exception {
+        this.alunoNegocio = new Aluno();
+        this.cursoNegocio = new Curso();
     }
 
     @Override
@@ -129,15 +114,18 @@ public class CadastroAlunoController implements Initializable {
         TableColumn coluna2 = new TableColumn("Nome");
         TableColumn coluna3 = new TableColumn("Nome Mae");
         TableColumn coluna4 = new TableColumn("Sexo");
+        TableColumn coluna5 = new TableColumn("Curso");
         coluna1.setMinWidth(100);
         coluna2.setMinWidth(200);
-        coluna3.setMinWidth(200);
+        coluna3.setMinWidth(100);
         coluna4.setMinWidth(50);
+        coluna5.setMinWidth(200);
         coluna1.setCellValueFactory(new PropertyValueFactory("matricula"));
         coluna2.setCellValueFactory(new PropertyValueFactory("nome"));
         coluna3.setCellValueFactory(new PropertyValueFactory("nomeMae"));
         coluna4.setCellValueFactory(new PropertyValueFactory("sexo"));
-        this.tabelaDados.getColumns().addAll(coluna1, coluna2, coluna3, coluna4);
+        coluna5.setCellValueFactory(new PropertyValueFactory("curso"));
+        this.tabelaDados.getColumns().addAll(coluna1, coluna2, coluna3, coluna4, coluna5);
         this.tabelaDados.setItems(FXCollections.observableArrayList(this.listaAluno));
 
         this.campoSexo.setItems(FXCollections.observableArrayList(EnumSexo.values()));
@@ -293,18 +281,15 @@ public class CadastroAlunoController implements Initializable {
         if(keyEvent.getCode() == KeyCode.ENTER) {
             this.listaAluno.clear();
             try {
-                this.listaAluno = this.alunoNegocio.pesquisaParteNome(this.campoPesquisaNome.getText().trim());
+                this.listaAluno = this.alunoNegocio.pesquisaParteNome(
+                        this.campoPesquisaNome.getText().trim());
             }
             catch(NegocioException ex) {
-                MensagemUtil.mensagemErro("Erro durante a consulta de dados \n\n" + ex.getMessage());
+                MensagemUtil.mensagemErro(
+                        "Erro durante a consulta de dados \n\n" + ex.getMessage());
             }
             this.atualizarDadosTableView();
         }
-    }
-
-    private void sair() {
-        this.stage.close();
-
     }
 
     private void TrataBotoes() {
@@ -351,7 +336,7 @@ public class CadastroAlunoController implements Initializable {
         this.campoNumero.setText(String.valueOf(alunoVO.getEndereco().getNumero()));
         this.campoBairro.setText(alunoVO.getEndereco().getBairro());
         this.campoCidade.setText(alunoVO.getEndereco().getCidade());
-        this.campoUF.getSelectionModel().select(alunoVO.getEndereco().getUf());
+        this.campoUF.getSelectionModel().select(alunoVO.getEndereco().getEnumUf());
         this.comboCurso.getSelectionModel().select(alunoVO.getCurso());
     }
 
@@ -373,7 +358,8 @@ public class CadastroAlunoController implements Initializable {
             }
             alunoVO.getEndereco().setBairro(this.campoBairro.getText());
             alunoVO.getEndereco().setCidade(this.campoCidade.getText());
-            alunoVO.getEndereco().setUf((EnumUF) this.campoUF.getSelectionModel().getSelectedItem());
+            alunoVO.getEndereco().setEnumUf(
+                    (EnumUF) this.campoUF.getSelectionModel().getSelectedItem());
             alunoVO.setCurso((CursoVO) this.comboCurso.getSelectionModel().getSelectedItem());
 
         }

@@ -15,24 +15,27 @@ public class DAO {
     public DAO(DatabaseConnection connection) throws PersistenciaException {
         this.connection = connection;
         try {
-            this.connection.getConnection().setAutoCommit(false);
-        } catch(SQLException ex) {
+            this.connection.getConexao().setAutoCommit(false);
+        }
+        catch(SQLException ex) {
             throw new PersistenciaException(" Erro ao configurar a conexão!");
         }
     }
 
     public void confirmarTransacao() throws PersistenciaException {
         try {
-            this.connection.getConnection().commit();
-        } catch(SQLException ex) {
+            this.connection.getConexao().commit();
+        }
+        catch(SQLException ex) {
             throw new PersistenciaException(" Transação não confirmada");
         }
     }
 
     public void cancelarTransacao() throws PersistenciaException {
         try {
-            this.connection.getConnection().rollback();
-        } catch(SQLException ex) {
+            this.connection.getConexao().rollback();
+        }
+        catch(SQLException ex) {
             throw new PersistenciaException(" Erro ao cancelar a transação!");
         }
     }

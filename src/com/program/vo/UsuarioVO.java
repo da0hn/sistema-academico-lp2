@@ -34,7 +34,7 @@ public class UsuarioVO {
     }
 
     public UsuarioVO(int codigo, String login, String senha, String matricula, String nome,
-                     EnumPerfilUsuario perfil, String email, String telefone) {
+            EnumPerfilUsuario perfil, String email, String telefone) {
         this.codigo = codigo;
         this.login = login;
         this.senha = senha;

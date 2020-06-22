@@ -1,16 +1,16 @@
 package com.program.persistencia;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.program.persistencia.base.DatabaseConnection;
 import com.program.persistencia.base.PersistenciaException;
 import com.program.vo.AlunoVO;
 import com.program.vo.EnumSexo;
 import com.program.vo.EnumUF;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlunoDAO extends DAO {
 
@@ -27,18 +27,26 @@ public class AlunoDAO extends DAO {
         this.cursoDAO = new CursoDAO(conexao);
 
         try {
-            this.comandoIncluir = conexao.getConnection().prepareStatement("INSERT INTO Aluno ( nome, nomemae, nomepai, sexo, "
-                                                                                   + "logradouro, numero, bairro, cidade, uf, curso )VALUES (?, ?, ?, ?, ?, ?, ? ,?, ?, ?)");
-            this.comandoAlterar = conexao.getConnection().prepareStatement(
+            this.comandoIncluir = conexao.getConexao().prepareStatement(
+                    "INSERT INTO Aluno ( nome, " +
+                            "nomemae, nomepai, sexo, "
+                            + "logradouro, numero, bairro, cidade, uf, curso )VALUES (?, ?, ?, ?," +
+                            " ?, ?, ? ,?, ?, ?)");
+            this.comandoAlterar = conexao.getConexao().prepareStatement(
                     "UPDATE Aluno SET nome=?, nomemae=?, nomepai=?, sexo=?,"
-                            + "logradouro=?, numero=?, bairro=?, cidade=?, uf=?, curso=? WHERE matricula=?");
-            this.comandoExcluir = conexao.getConnection().prepareStatement("DELETE FROM Aluno WHERE matricula=?");
-            this.comandoBucarPorMatricula = conexao.getConnection().prepareStatement("SELECT * FROM Aluno WHERE matricula = ?");
-            this.comandoBuscarPorNome = conexao.getConnection().prepareStatement("SELECT * FROM aluno WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10");
+                            + "logradouro=?, numero=?, bairro=?, cidade=?, uf=?, curso=? WHERE " +
+                            "matricula=?");
+            this.comandoExcluir = conexao.getConexao().prepareStatement(
+                    "DELETE FROM Aluno WHERE matricula=?");
+            this.comandoBucarPorMatricula = conexao.getConexao().prepareStatement(
+                    "SELECT * FROM Aluno WHERE matricula = ?");
+            this.comandoBuscarPorNome = conexao.getConexao().prepareStatement(
+                    "SELECT * FROM aluno WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10");
 
         }
         catch(SQLException ex) {
-            throw new PersistenciaException("Erro ao iniciar camada de persistência - " + ex.getMessage());
+            throw new PersistenciaException(
+                    "Erro ao iniciar camada de persistência - " + ex.getMessage());
         }
     }
 
@@ -53,7 +61,7 @@ public class AlunoDAO extends DAO {
             comandoIncluir.setInt(6, alunoVO.getEndereco().getNumero());
             comandoIncluir.setString(7, alunoVO.getEndereco().getBairro());
             comandoIncluir.setString(8, alunoVO.getEndereco().getCidade());
-            comandoIncluir.setString(9, alunoVO.getEndereco().getUf().name());
+            comandoIncluir.setString(9, alunoVO.getEndereco().getEnumUf().name());
             comandoIncluir.setInt(10, alunoVO.getCurso().getCodigo());
             retorno = comandoIncluir.executeUpdate();
         }
@@ -75,7 +83,7 @@ public class AlunoDAO extends DAO {
             comandoAlterar.setInt(6, alunoVO.getEndereco().getNumero());
             comandoAlterar.setString(7, alunoVO.getEndereco().getBairro());
             comandoAlterar.setString(8, alunoVO.getEndereco().getCidade());
-            comandoAlterar.setString(9, alunoVO.getEndereco().getUf().name());
+            comandoAlterar.setString(9, alunoVO.getEndereco().getEnumUf().name());
             comandoAlterar.setInt(10, alunoVO.getCurso().getCodigo());
             comandoAlterar.setInt(11, alunoVO.getMatricula());
 
@@ -143,7 +151,7 @@ public class AlunoDAO extends DAO {
         aluno.getEndereco().setNumero(rs.getInt("numero"));
         aluno.getEndereco().setBairro(rs.getString("bairro"));
         aluno.getEndereco().setCidade(rs.getString("cidade"));
-        aluno.getEndereco().setUf(EnumUF.valueOf(rs.getString("uf")));
+        aluno.getEndereco().setEnumUf(EnumUF.valueOf(rs.getString("uf")));
         aluno.setCurso(this.cursoDAO.buscarPorCodigo(rs.getInt("curso")));
         return aluno;
     }

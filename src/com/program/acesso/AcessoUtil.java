@@ -9,7 +9,7 @@ import com.program.vo.UsuarioVO;
 public class AcessoUtil {
     private static UsuarioVO usuarioLogado;
 
-    public static UsuarioVO getUsuarioLogado(){
+    public static UsuarioVO getUsuarioLogado() {
         return AcessoUtil.usuarioLogado;
     }
 

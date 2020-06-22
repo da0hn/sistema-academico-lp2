@@ -9,22 +9,22 @@ public class EnderecoVO {
     private int numero;
     private String bairro;
     private String cidade;
-    private EnumUF uf;
+    private EnumUF enumUf;
 
     public EnderecoVO() {
         this.logradouro = " ";
         this.numero = 0;
         this.bairro = " ";
         this.cidade = " ";
-        this.uf = EnumUF.MT;
+        this.enumUf = EnumUF.MT;
     }
 
-    public EnderecoVO(String logradouro, int numero, String bairro, String cidade, EnumUF uf) {
+    public EnderecoVO(String logradouro, int numero, String bairro, String cidade, EnumUF enumUf) {
         this.logradouro = logradouro;
         this.numero = numero;
         this.bairro = bairro;
         this.cidade = cidade;
-        this.uf = uf;
+        this.enumUf = enumUf;
     }
 
     public String getLogradouro() {
@@ -59,12 +59,12 @@ public class EnderecoVO {
         this.cidade = cidade;
     }
 
-    public EnumUF getUf() {
-        return uf;
+    public EnumUF getEnumUf() {
+        return enumUf;
     }
 
-    public void setUf(EnumUF uf) {
-        this.uf = uf;
+    public void setEnumUf(EnumUF enumUf) {
+        this.enumUf = enumUf;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class EnderecoVO {
                 ", numero=" + numero +
                 ", bairro='" + bairro + '\'' +
                 ", cidade='" + cidade + '\'' +
-                ", uf=" + uf +
+                ", uf=" + enumUf +
                 '}';
     }
 }

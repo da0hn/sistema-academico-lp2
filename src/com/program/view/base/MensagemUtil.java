@@ -1,18 +1,19 @@
 package com.program.view.base;
 
-import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.util.Optional;
+
 public class MensagemUtil {
 
+    public static final boolean CONFIRMOU = true;
+    public static final boolean CANCELOU = false;
     private static final Alert INFORMATION_MESSAGE;
     private static final Alert CONFIRMATION_MESSAGE;
     private static final Alert ERROR_MESSAGE;
     private static final Alert WARNING_MESSAGE;
-    public static final boolean CONFIRMOU = true;
-    public static final boolean CANCELOU = false;
-    
+
     static {
         INFORMATION_MESSAGE = new Alert(Alert.AlertType.INFORMATION);
         INFORMATION_MESSAGE.setTitle("Menssagem de informação");
@@ -50,9 +51,10 @@ public class MensagemUtil {
         CONFIRMATION_MESSAGE.setHeaderText("Responda a questão");
         CONFIRMATION_MESSAGE.setContentText(detalheMensagem);
         Optional<ButtonType> result = CONFIRMATION_MESSAGE.showAndWait();
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+        if((result.isPresent()) && (result.get() == ButtonType.OK)) {
             return MensagemUtil.CONFIRMOU;
-        } else {
+        }
+        else {
             return MensagemUtil.CANCELOU;
         }
     }

@@ -1,15 +1,15 @@
-
 package com.program.view.base;
 
 /**
- * Usado para controlar a lógica de execução nos controladores de cadastros. 
+ * Usado para controlar a lógica de execução nos controladores de cadastros.
+ *
  * @author Evandro
  */
 public enum OpCadastroEnum {
-    ALTERAR, 
+    ALTERAR,
     CANCELAR,
     CONSULTAR,
-    EXCLUIR, 
-    INCLUIR, 
+    EXCLUIR,
+    INCLUIR,
     SALVAR
 }

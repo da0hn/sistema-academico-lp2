@@ -11,6 +11,10 @@ public class CursoVO {
 
     public CursoVO() {}
 
+    public CursoVO(String nome) {
+        this.nome = nome;
+    }
+
     public CursoVO(int codigo, String nome) {
         this();
         this.codigo = codigo;

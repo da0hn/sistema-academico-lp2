@@ -12,18 +12,6 @@ public class BaseController {
     public BaseController() throws Exception {
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void sair() {
-        this.stage.close();
-    }
-
     public static boolean verificaPermissaoAcesso(EnumPerfilUsuario perfilNecessario) {
         if(AcessoUtil.getUsuarioLogado() != null) {
             if(AcessoUtil.getUsuarioLogado().getPerfil() == perfilNecessario) {
@@ -38,5 +26,17 @@ public class BaseController {
             MensagemUtil.mensagemErro("Usuário não Identificado");
             return false;
         }
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void sair() {
+        this.stage.close();
     }
 }

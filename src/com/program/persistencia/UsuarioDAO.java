@@ -1,5 +1,6 @@
 package com.program.persistencia;
 
+
 import com.program.persistencia.base.DatabaseConnection;
 import com.program.persistencia.base.PersistenciaException;
 import com.program.vo.EnumPerfilUsuario;
@@ -11,58 +12,54 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * @project lp2_academico
- * @author Gabriel Honda on 10/06/2020
- */
+
 public class UsuarioDAO extends DAO {
 
     private PreparedStatement comandoIncluir;
     private PreparedStatement comandoAlterar;
     private PreparedStatement comandoExcluir;
     private PreparedStatement comandoAlterarSenha;
-    private PreparedStatement comandoBuscarUsuarioPorCodigo;
-    private PreparedStatement comandoBuscarUsuarioPorLogin;
+    private PreparedStatement comandoBucarUsuarioPorCodigo;
+    private PreparedStatement comandoBucarUsuarioPorLogin;
     private PreparedStatement comandoBuscarUsuarioPorNome;
 
+    public UsuarioDAO(DatabaseConnection conexao) throws PersistenciaException {
+        super(conexao);
 
-    public UsuarioDAO(DatabaseConnection connection) throws PersistenciaException {
-        super(connection);
         try {
-            this.comandoIncluir = connection.getConnection()
-                    .prepareStatement("INSERT INTO usuario (matricula, login, senha, nome, " +
-                            "perfil, email, telefone) VALUES (?,?,?,?,?,?,?)");
-            this.comandoAlterar = connection.getConnection()
-                    .prepareStatement("UPDATE usuario SET matricula=?, login=?, nome=?, perfil=?," +
-                            " email=?, telefone=? WHERE codigo=?");
-            this.comandoAlterarSenha = connection.getConnection()
-                    .prepareStatement("UPDATE usuario SET senha=? WHERE upper(login)=?");
-            this.comandoExcluir = connection.getConnection()
-                    .prepareStatement("DELETE FROM usuario WHERE codigo=?");
-            this.comandoBuscarUsuarioPorCodigo = connection.getConnection()
-                    .prepareStatement("SELECT * FROM usuario WHERE codigo=?");
-            this.comandoBuscarUsuarioPorLogin = connection.getConnection()
-                    .prepareStatement("SELECT * FROM usuario WHERE upper(login)=?");
-            this.comandoBuscarUsuarioPorNome = connection.getConnection()
-                    .prepareStatement("SELECT * FROM usuario WHERE upper(nome) LIKE ? ORDER BY " +
-                            "NOME LIMIT 15");
+            this.comandoIncluir = conexao.getConexao().prepareStatement(
+                    "INSERT INTO usuario (matricula, login, senha, nome, perfil, email, telefone " +
+                            ") VALUES (?,?,?,?,?,?,?)");
+            this.comandoAlterar = conexao.getConexao().prepareStatement(
+                    "UPDATE usuario SET matricula=?, login=?, nome=?, perfil=?, email=?, " +
+                            "telefone=? WHERE codigo=?");
+            this.comandoAlterarSenha = conexao.getConexao().prepareStatement(
+                    "UPDATE usuario SET senha=? WHERE upper(login)=?");
+            this.comandoExcluir = conexao.getConexao().prepareStatement(
+                    "DELETE FROM usuario WHERE codigo=?");
+            this.comandoBucarUsuarioPorCodigo = conexao.getConexao().prepareStatement(
+                    "SELECT * FROM usuario WHERE codigo = ?");
+            this.comandoBucarUsuarioPorLogin = conexao.getConexao().prepareStatement(
+                    "SELECT * FROM usuario WHERE upper(login) = ?");
+            this.comandoBuscarUsuarioPorNome = conexao.getConexao().prepareStatement(
+                    "SELECT * FROM usuario WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 15");
         }
         catch(SQLException ex) {
             throw new PersistenciaException(
-                    " Erro ao iniciar a camada de persistencia - " + ex.getMessage());
+                    "Erro ao iniciar camada de persistência - " + ex.getMessage());
         }
     }
 
-    public int incluir(UsuarioVO usuario) throws PersistenciaException {
+    public int incluir(UsuarioVO usuarioVO) throws PersistenciaException {
         int retorno = 0;
         try {
-            comandoIncluir.setString(1, usuario.getMatricula());
-            comandoIncluir.setString(2, usuario.getLogin());
-            comandoIncluir.setString(3, usuario.getSenha());
-            comandoIncluir.setString(4, usuario.getNome());
-            comandoIncluir.setString(5, usuario.getPerfil().name());
-            comandoIncluir.setString(6, usuario.getEmail());
-            comandoIncluir.setString(7, usuario.getTelefone());
+            comandoIncluir.setString(1, usuarioVO.getMatricula());
+            comandoIncluir.setString(2, usuarioVO.getLogin());
+            comandoIncluir.setString(3, usuarioVO.getSenha());
+            comandoIncluir.setString(4, usuarioVO.getNome());
+            comandoIncluir.setString(5, usuarioVO.getPerfil().name());
+            comandoIncluir.setString(6, usuarioVO.getEmail());
+            comandoIncluir.setString(7, usuarioVO.getTelefone());
             retorno = comandoIncluir.executeUpdate();
         }
         catch(SQLException ex) {
@@ -71,20 +68,20 @@ public class UsuarioDAO extends DAO {
         return retorno;
     }
 
-    public int alterar(UsuarioVO usuario) throws PersistenciaException {
+    public int alterar(UsuarioVO usuarioVO) throws PersistenciaException {
         int retorno = 0;
         try {
-            comandoAlterar.setString(1, usuario.getMatricula());
-            comandoAlterar.setString(2, usuario.getLogin());
-            comandoAlterar.setString(3, usuario.getSenha());
-            comandoAlterar.setString(4, usuario.getNome());
-            comandoAlterar.setString(5, usuario.getPerfil().name());
-            comandoAlterar.setString(6, usuario.getEmail());
-            comandoAlterar.setString(7, usuario.getTelefone());
+            comandoAlterar.setString(1, usuarioVO.getMatricula());
+            comandoAlterar.setString(2, usuarioVO.getLogin());
+            comandoAlterar.setString(3, usuarioVO.getNome());
+            comandoAlterar.setString(4, usuarioVO.getPerfil().name());
+            comandoAlterar.setString(5, usuarioVO.getEmail());
+            comandoAlterar.setString(6, usuarioVO.getTelefone());
+            comandoAlterar.setInt(7, usuarioVO.getCodigo());
             retorno = comandoAlterar.executeUpdate();
         }
         catch(SQLException ex) {
-            throw new PersistenciaException("DAO - Erro ao alterar o usuário - " + ex.getMessage());
+            throw new PersistenciaException("DAO - Erro ao alterar o usuario - " + ex.getMessage());
         }
         return retorno;
     }
@@ -96,12 +93,12 @@ public class UsuarioDAO extends DAO {
             retorno = comandoExcluir.executeUpdate();
         }
         catch(SQLException ex) {
-            throw new PersistenciaException("DAO - Erro ao excluir o usuário - " + ex.getMessage());
+            throw new PersistenciaException("DAO - Erro ao excluir o usuario - " + ex.getMessage());
         }
         return retorno;
     }
 
-    public int alterarSenha(String login, String novaSenha) {
+    public int alterarSenha(String login, String novaSenha) throws PersistenciaException {
         int retorno = 0;
         try {
             comandoAlterarSenha.setString(1, novaSenha);
@@ -109,70 +106,74 @@ public class UsuarioDAO extends DAO {
             retorno = comandoAlterarSenha.executeUpdate();
         }
         catch(SQLException ex) {
-            System.err.println(
-                    "DAO - Erro ao alterar a senha do usuário - " + ex.getMessage());
+            throw new PersistenciaException(
+                    "DAO - Erro ao alterar a senha do usuario - " + ex.getMessage());
         }
         return retorno;
     }
 
     public UsuarioVO buscarPorCodigo(int codigo) {
-        UsuarioVO usuario = null;
+
+        UsuarioVO usuarioVO = null;
+
         try {
-            comandoBuscarUsuarioPorCodigo.setInt(1, codigo);
-            var rs = comandoBuscarUsuarioPorCodigo.executeQuery();
+            comandoBucarUsuarioPorCodigo.setInt(1, codigo);
+            ResultSet rs = comandoBucarUsuarioPorCodigo.executeQuery();
             if(rs.next()) {
-                usuario = this.buildVO(rs);
+                usuarioVO = this.montarVO(rs);
             }
         }
         catch(SQLException ex) {
-            System.err.println(
-                    "DAO - Erro ao buscar usuário por código - " + ex.getMessage());
+            System.err.println(ex);
         }
-        return usuario;
+        return usuarioVO;
     }
 
     public List<UsuarioVO> buscarPorNome(String nome) {
-        var listaUsuario = new ArrayList<UsuarioVO>();
+        List<UsuarioVO> listaCurso = new ArrayList();
+
         try {
-            comandoBuscarUsuarioPorNome.setString(1,
-                    "%" + nome.trim().toUpperCase() + "%"
-            );
-            var rs = comandoBuscarUsuarioPorNome.executeQuery();
+            comandoBuscarUsuarioPorNome.setString(1, "%" + nome.trim().toUpperCase() + "%");
+            ResultSet rs = comandoBuscarUsuarioPorNome.executeQuery();
             while(rs.next()) {
-                listaUsuario.add(buildVO(rs));
+                listaCurso.add(this.montarVO(rs));
             }
         }
         catch(SQLException ex) {
-            System.err.println(
-                    "DAO - Erro ao buscar usuarios por nome - " + ex.getMessage());
+            System.err.println(ex);
         }
-        return listaUsuario;
+        return listaCurso;
     }
 
     public UsuarioVO buscarPorLogin(String login) {
-        UsuarioVO usuario = null;
+
+        UsuarioVO usuarioVO = null;
+
         try {
-            comandoBuscarUsuarioPorLogin.setString(1, login.toUpperCase());
-            var rs = comandoBuscarUsuarioPorLogin.executeQuery();
+            comandoBucarUsuarioPorLogin.setString(1, login.toUpperCase());
+            ResultSet rs = comandoBucarUsuarioPorLogin.executeQuery();
             if(rs.next()) {
-                usuario = buildVO(rs);
+                usuarioVO = this.montarVO(rs);
             }
         }
         catch(SQLException ex) {
-            System.err.println("DAO - Erro ao buscar usuario por login - " + ex.getMessage());
+            System.err.println(ex);
         }
-        return usuario;
+        return usuarioVO;
     }
 
-    private UsuarioVO buildVO(ResultSet rs) throws SQLException {
-        var usuario = new UsuarioVO();
-        usuario.setCodigo(rs.getInt("codigo"));
-        usuario.setMatricula(rs.getString("matricula").trim());
-        usuario.setLogin(rs.getString("login").trim());
-        usuario.setSenha(rs.getString("senha").trim());
-        usuario.setNome(rs.getString("nome").trim());
-        usuario.setPerfil(EnumPerfilUsuario.valueOf(rs.getString("perfil").trim()));
-        usuario.setTelefone(rs.getString("telefone").trim());
-        return usuario;
+    private UsuarioVO montarVO(ResultSet rs) throws SQLException {
+        UsuarioVO usuarioVO = new UsuarioVO();
+
+        usuarioVO.setCodigo(rs.getInt("codigo"));
+        usuarioVO.setMatricula(rs.getString("matricula").trim());
+        usuarioVO.setLogin(rs.getString("login").trim());
+        usuarioVO.setSenha(rs.getString("senha").trim());
+        usuarioVO.setNome(rs.getString("nome").trim());
+        usuarioVO.setPerfil(EnumPerfilUsuario.valueOf(rs.getString("perfil").trim()));
+        usuarioVO.setEmail(rs.getString("email"));
+        usuarioVO.setTelefone(rs.getString("telefone"));
+
+        return usuarioVO;
     }
 }

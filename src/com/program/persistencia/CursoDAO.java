@@ -7,6 +7,7 @@ import com.program.vo.CursoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +26,21 @@ public class CursoDAO extends DAO {
     public CursoDAO(DatabaseConnection connection) throws PersistenciaException {
         super(connection);
         try {
-            this.comandoIncluir = connection.getConnection()
-                    .prepareStatement("INSERT INTO curso ( nome ) VALUES (?)");
-            this.comandoAlterar = connection.getConnection()
+            this.comandoIncluir = connection.getConexao()
+                    .prepareStatement("INSERT INTO curso ( nome ) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+            this.comandoAlterar = connection.getConexao()
                     .prepareStatement("UPDATE curso SET nome=? WHERE codigo=?");
-            this.comandoExcluir = connection.getConnection()
+            this.comandoExcluir = connection.getConexao()
                     .prepareStatement("DELETE FROM curso WHERE codigo=?");
-            this.comandoBuscarPorCodigo = connection.getConnection()
+            this.comandoBuscarPorCodigo = connection.getConexao()
                     .prepareStatement("SELECT * FROM curso WHERE codigo=?");
-            this.comandoBuscarPorNome = connection.getConnection()
-                    .prepareStatement("SELECT * FROM curso WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10");
+            this.comandoBuscarPorNome = connection.getConexao()
+                    .prepareStatement(
+                            "SELECT * FROM curso WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10");
         }
         catch(SQLException ex) {
-            throw new PersistenciaException(" Erro ao iniciar a camada de persistencia - " + ex.toString());
+            throw new PersistenciaException(
+                    " Erro ao iniciar a camada de persistencia - " + ex.toString());
         }
     }
 
@@ -46,6 +49,13 @@ public class CursoDAO extends DAO {
         try {
             comandoIncluir.setString(1, cursoVO.getNome());
             retorno = comandoIncluir.executeUpdate();
+            if( retorno > 0) {
+                var rs = comandoIncluir.getGeneratedKeys();
+                if(rs.next()) {
+                    cursoVO.setCodigo(rs.getInt(1));
+                }
+//                connection.desconnect();
+            }
         }
         catch(SQLException ex) {
             throw new PersistenciaException(" Erro ao alterar o curso - " + ex.getMessage());
