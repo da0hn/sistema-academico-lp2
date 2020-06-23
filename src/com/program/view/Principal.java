@@ -21,7 +21,13 @@ public class Principal extends Application {
         if(Login.verificiarExistenciaUsuario()) {
             //Stage stageTemp = new Stage(StageStyle.UNIFIED);
             Stage stageTemp = new Stage();
-            Parent parent = FXMLLoader.load(getClass().getResource("MenuPrincipalFXML.fxml"));
+            FXMLLoader fxmlLoader =
+                    new FXMLLoader(getClass().getResource("MenuPrincipalFXML.fxml"));
+            Parent parent = fxmlLoader.load();
+
+            MenuPrincipalController controller = fxmlLoader.getController();
+            controller.setStage(stageTemp);
+
             Scene scene = new Scene(parent);
             stageTemp.setScene(scene);
             stageTemp.setTitle("Menu Principal");

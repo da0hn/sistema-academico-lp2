@@ -40,6 +40,7 @@ public class DisciplinaDAO extends DAO implements IDisciplinaDAO {
                     "SELECT * FROM disciplina WHERE codigo=?");
             this.comandoBuscarPorNome = conexao.getConexao().prepareStatement(
                     "SELECT * FROM disciplina WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10");
+            // "SELECT * FROM disciplina WHERE UPPER(nome) LIKE ? ORDER BY NOME LIMIT 10"
             this.comandoBuscarPorCurso = conexao.getConexao().prepareStatement("SELECT * FROM " +
                     "disciplina WHERE curso=?");
         }
@@ -102,6 +103,7 @@ public class DisciplinaDAO extends DAO implements IDisciplinaDAO {
     public DisciplinaVO buscarPorCodigo(int codigo) throws PersistenciaException {
         DisciplinaVO disciplinaVO = null;
         try {
+            comandoBuscarPorCodigo.setInt(1, codigo);
             var rs = comandoBuscarPorCodigo.executeQuery();
             if(rs.next()) {
                 disciplinaVO = buildVO(rs);
@@ -119,9 +121,8 @@ public class DisciplinaDAO extends DAO implements IDisciplinaDAO {
         disciplina.setNome(rs.getString("nome"));
         disciplina.setSemestre(rs.getInt("semestre"));
 
-        CursoVO curso = cursoDAO.buscarPorCodigo(rs.getInt("codigo"));
+        CursoVO curso = cursoDAO.buscarPorCodigo(rs.getInt("curso"));
         disciplina.setCurso(curso);
-
         return disciplina;
     }
 
@@ -145,7 +146,7 @@ public class DisciplinaDAO extends DAO implements IDisciplinaDAO {
     public List<DisciplinaVO> buscarPorNome(String nome) throws PersistenciaException {
         var disciplinas = new ArrayList<DisciplinaVO>();
         try {
-            comandoBuscarPorNome.setString(1, nome);
+            comandoBuscarPorNome.setString(1, "%" + nome.trim().toUpperCase() + "%");
             var rs = comandoBuscarPorNome.executeQuery();
             while(rs.next()) {
                 disciplinas.add(buildVO(rs));

@@ -2,6 +2,7 @@ package com.program.negocio;
 
 import com.program.negocio.base.NegocioException;
 import com.program.persistencia.DisciplinaDAO;
+import com.program.persistencia.IDisciplinaDAO;
 import com.program.persistencia.base.DatabaseConnection;
 import com.program.persistencia.base.PersistenciaException;
 import com.program.vo.CursoVO;

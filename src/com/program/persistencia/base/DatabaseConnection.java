@@ -1,7 +1,6 @@
 package com.program.persistencia.base;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,12 +17,19 @@ public class DatabaseConnection {
 
     private DatabaseConnection() throws PersistenciaException {
         try {
-            var propriedades = carregarPropriedades();
+            Properties propriedades = carregarPropriedades();
+            Class.forName(propriedades.getProperty("DriverBD"));
             var url = propriedades.getProperty("UrlBD");
-            connection = DriverManager.getConnection(url, propriedades);
+            var user = propriedades.getProperty("UsuarioBD");
+            var password = propriedades.getProperty("SenhaBD");
+            connection = DriverManager.getConnection(url, user, password);
         }
         catch(SQLException ex) {
             throw new PersistenciaException("Erro ao conectar o banco de dados - " + ex.toString());
+        }
+        catch(ClassNotFoundException ex) {
+            throw new PersistenciaException(
+                    "Driver do banco de dados não localizado - " + ex.toString());
         }
     }
 

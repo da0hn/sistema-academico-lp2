@@ -1,5 +1,6 @@
 package com.program.view.acesso;
 
+import com.program.acesso.AcessoUtil;
 import com.program.negocio.Usuario;
 import com.program.negocio.base.NegocioException;
 import com.program.view.base.MensagemUtil;

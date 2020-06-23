@@ -8,7 +8,6 @@ public class BaseController {
 
     private Stage stage;
 
-
     public BaseController() throws Exception {
     }
 

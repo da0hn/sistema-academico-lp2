@@ -4,9 +4,9 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-            stylesheets="@css/menuprincipal.css" xmlns="http://javafx.com/javafx/8.0.141"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@css/menuprincipal.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.program.view.MenuPrincipalController">
     <children>
         <MenuBar fx:id="barraMenu" layoutX="214.0" layoutY="32.0" prefHeight="27.0"
@@ -15,17 +15,20 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Configurações">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close"/>
+                        <MenuItem mnemonicParsing="false" onAction="#menuItemCloseAction"
+                                  text="Logout"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Cadastros">
                     <items>
                         <MenuItem id="menuItemCadastroAluno" mnemonicParsing="false"
                                   onAction="#menuItemCadastroAlunoAction" text="Aluno"/>
-                        <MenuItem id="menuItemCadastroProfessor" mnemonicParsing="false"
+                        <MenuItem id="menuItemCadastroCurso" mnemonicParsing="false"
                                   onAction="#menuItemCadastroCursoAction" text="Curso"/>
-                        <MenuItem id="menuItemCadastroProfessor" mnemonicParsing="false"
+                        <MenuItem id="menuItemCadastroUsuario" mnemonicParsing="false"
                                   onAction="#menuItemCadastroUsuarioAction" text="Usuário"/>
+                        <MenuItem id="menuItemCadastroDisciplina" mnemonicParsing="false"
+                                  onAction="#menuItemCadastroDisciplinaAction" text="Disciplina"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Relatórios">

@@ -54,7 +54,6 @@ public class CursoDAO extends DAO {
                 if(rs.next()) {
                     cursoVO.setCodigo(rs.getInt(1));
                 }
-//                connection.desconnect();
             }
         }
         catch(SQLException ex) {

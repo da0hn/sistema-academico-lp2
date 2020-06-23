@@ -5,6 +5,7 @@ import com.program.view.aluno.CadastroAlunoController;
 import com.program.view.base.BaseController;
 import com.program.view.base.MensagemUtil;
 import com.program.view.curso.CadastroCursoController;
+import com.program.view.disciplina.CadastroDisciplinaController;
 import com.program.view.usuario.CadastroUsuarioController;
 import com.program.vo.EnumPerfilUsuario;
 import javafx.event.ActionEvent;
@@ -22,6 +23,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MenuPrincipalController implements Initializable {
+
+    private Stage stage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -110,5 +113,41 @@ public class MenuPrincipalController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         }
+    }
+
+    @FXML
+    private void menuItemCadastroDisciplinaAction(ActionEvent event) {
+        if(BaseController.verificaPermissaoAcesso(EnumPerfilUsuario.GESTAO)) {
+            Stage stage = new Stage(StageStyle.DECORATED);
+            Parent parent = null;
+            FXMLLoader fxmlLoader = null;
+            try {
+                fxmlLoader = new FXMLLoader(
+                        getClass().getResource("disciplina/CadastroDisciplinaFXML.fxml"));
+                parent = fxmlLoader.load();
+            }
+            catch(IOException ex) {
+                MensagemUtil.mensagemErro(
+                        "Erro ao iniciar a tela de cadastro de Disciplina \n\n" + ex.getMessage());
+            }
+
+            CadastroDisciplinaController controller = fxmlLoader.getController();
+            controller.setStage(stage);
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.setTitle("Cadastro Disciplinas");
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        }
+    }
+
+    @FXML
+    private void menuItemCloseAction(ActionEvent event) {
+        this.stage.close();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
