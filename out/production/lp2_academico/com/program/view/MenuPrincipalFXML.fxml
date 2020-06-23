@@ -17,6 +17,9 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#menuItemCloseAction"
                                   text="Logout"/>
+                        <MenuItem id="menuItemConfiguracaoConexao" mnemonicParsing="false"
+                                  onAction="#menuItemConfiguracaoConexaoAction"
+                                  text="Configuração de Conexão"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Cadastros">

@@ -6,6 +6,7 @@ import com.program.view.base.BaseController;
 import com.program.view.base.MensagemUtil;
 import com.program.view.curso.CadastroCursoController;
 import com.program.view.disciplina.CadastroDisciplinaController;
+import com.program.view.propriedadesconexao.SalvarPropriedadesController;
 import com.program.view.usuario.CadastroUsuarioController;
 import com.program.vo.EnumPerfilUsuario;
 import javafx.event.ActionEvent;
@@ -109,6 +110,34 @@ public class MenuPrincipalController implements Initializable {
             Scene scene = new Scene(parent);
             stage.setScene(scene);
             stage.setTitle("Cadastro de Usuários");
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        }
+    }
+
+    @FXML
+    private void menuItemConfiguracaoConexaoAction(ActionEvent event) {
+        if(BaseController.verificaPermissaoAcesso(EnumPerfilUsuario.ADMINISTRADOR)) {
+            Stage stage = new Stage(StageStyle.DECORATED);
+            Parent parent = null;
+            FXMLLoader fxmlLoader = null;
+            try {
+                fxmlLoader = new FXMLLoader(
+                        getClass().getResource("propriedadesconexao/SalvarPropriedadesFXML.fxml"));
+                parent = fxmlLoader.load();
+            }
+            catch(IOException ex) {
+                MensagemUtil.mensagemErro(
+                        "Erro ao iniciar a tela de configuração das propriedades de conexão " +
+                                "\n\n" + ex.getMessage());
+            }
+
+            SalvarPropriedadesController controller = fxmlLoader.getController();
+            controller.setStage(stage);
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.setTitle("Configuração das propriedades de conexão");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();

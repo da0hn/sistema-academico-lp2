@@ -17,7 +17,7 @@ public class DatabaseConnection {
 
     private DatabaseConnection() throws PersistenciaException {
         try {
-            Properties propriedades = carregarPropriedades();
+            Properties propriedades = PropertiesConnection.carregarPropriedades();
             Class.forName(propriedades.getProperty("DriverBD"));
             var url = propriedades.getProperty("UrlBD");
             var user = propriedades.getProperty("UsuarioBD");
@@ -38,17 +38,6 @@ public class DatabaseConnection {
             INSTANCE = new DatabaseConnection();
         }
         return INSTANCE;
-    }
-
-    private static Properties carregarPropriedades() throws PersistenciaException {
-        Properties propriedadesDeConexao = new Properties();
-        try( var fs = new FileInputStream("configuracaoBD.properties")) {
-            propriedadesDeConexao.load(fs);
-        }
-        catch(IOException e) {
-            throw new PersistenciaException("Erro ao carregar as propriedades");
-        }
-        return propriedadesDeConexao;
     }
 
     public Connection getConexao() {

@@ -18,5 +18,6 @@ module academico {
     opens com.program.view.acesso;
     opens com.program.view.disciplina;
     opens com.program.view;
+    opens com.program.view.propriedadesconexao;
     opens test;
 }
